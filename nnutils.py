@@ -29,42 +29,6 @@ def minibatch(dat, labels, size=500, noise_std=1e-8):
 
 
     return data, y.reshape((-1,1))
-# def batch(dat, labels):
-#     '''Takes dat as a (num_groups, num_cases, slices_per_group, num_times,
-#     rsize, csize) tensor and returns (num_cases * num_combs, rsize, csize,
-#     num_groups) where num_combs is slices_per_group**num_groups and each
-#     case is represented by '''
-
-#     num_cases, num_slices, num_times, rsize, csize = np.shape(dat)
-
-#     num_combs = 18*3*2
-#     num_groups = 6
-
-#     data = np.zeros((num_cases*num_combs,rsize,csize,num_groups), dtype='float32')
-#     labels = np.repeat(labels, num_combs)
-
-#     slice_perms = [(i,j) for i in range(3)
-#                     for j in range(2)]
-#     time_perms = [(i,j,k) for i in range(num_times//3)
-#                     for j in range(num_times//3,2*num_times//3)
-#                     for k in range(2*num_times//3,num_times)]
-#     comb = 0
-#     for (i,j) in slice_perms:
-#         for (x,y,z) in time_perms:
-#             data[comb::num_combs,:,:,0] = dat[:, i, x]
-#             data[comb::num_combs,:,:,1] = dat[:, j, x]
-
-#             #
-#             data[comb::num_combs,:,:,2] = dat[:, i, y]
-#             data[comb::num_combs,:,:,3] = dat[:, j, y]
-
-#             #
-#             data[comb::num_combs,:,:,4] = dat[:, i, z]
-#             data[comb::num_combs,:,:,5] = dat[:, j, z]
-
-#             comb += 1
-
-#     return data, labels.reshape((-1,1))
 
 def batch(dat, labels):
     '''Takes dat as a (num_groups, num_cases, slices_per_group, num_times,
@@ -170,11 +134,6 @@ def median_filter(X):
     medians = np.median(np.median(X,1), 1)
     return X*(X>medians[:,None,None,:])
 
-# def scale_unit_var(X):
-#     mean = np.mean(np.mean(X,4), 4)
-#     std = np.std(np.std(X,4), 4)
-#     return (X-mean[:,:,:,:,None,None])/std[:,:,:,:,None,None]
-
 def scale_unit_var(X):
     mean = np.mean(np.mean(X,1), 1)[:,None,None,:]
     std = np.std(np.std(X,1), 1)[:,None,None,:]
@@ -194,9 +153,6 @@ def make_cdf(y, std=0.):
     cdf[cdf>1.] = 1.
 
     return cdf
-
-
-
 
 def average_repeated_predictions(test_preds, num_reps=64):
     '''Takes (num_cases*num_reps, output_size) and returns (num_cases,
