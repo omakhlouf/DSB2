@@ -1,0 +1,1 @@
+root_train = '/Users/omakhlouf/Desktop/Data Science Bowl/train'
